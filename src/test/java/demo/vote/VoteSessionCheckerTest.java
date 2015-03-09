@@ -2,16 +2,16 @@ package demo.vote;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import demo.book.Book;
 
-@Ignore
 public class VoteSessionCheckerTest {
 
 	VoteSessionChecker checker = new VoteSessionChecker();
@@ -34,7 +34,8 @@ public class VoteSessionCheckerTest {
 				new Vote(books.get(2), books.get(3), voteSession),
 				new Vote(books.get(0), books.get(2), voteSession),
 				new Vote(books.get(1), books.get(3), voteSession),
-				new Vote(books.get(3), books.get(4), voteSession));
+				new Vote(books.get(3), books.get(4), voteSession),
+				new Vote(books.get(1), books.get(2), voteSession));
 	}
 	
 	@Test
@@ -46,16 +47,6 @@ public class VoteSessionCheckerTest {
 		List<Book> sorted = checker.sort(partialVotes);
 		
 		assertArrayEquals(proof.toArray(), sorted.toArray());
-	}
-
-	@Test(expected=VoteSessionNotFinishedException.class)
-	public void testSort2Votes4Books() {
-		checker.sort(votes.subList(0, 2));
-	}
-
-	@Test(expected=VoteSessionNotFinishedException.class)
-	public void testSort3Votes4Books() {
-		checker.sort(votes.subList(0, 4));
 	}
 
 	@Test
@@ -73,4 +64,57 @@ public class VoteSessionCheckerTest {
 		assertArrayEquals(proof.toArray(), sorted.toArray());
 	}
 
+	@Test
+	public void testSortCompleted(){
+		List<Book> sorted = checker.sort(votes);
+		assertArrayEquals(books.toArray(), sorted.toArray());
+	}
+	
+	@Test
+	public void testWin(){
+		Assert.assertTrue(checker.win(books.get(0), books.get(1), votes.subList(0, 1)));
+	}
+
+	@Test
+	public void testIndirectWin(){
+		Assert.assertTrue(checker.win(books.get(0), books.get(3), votes));
+	}
+
+	@Test
+	public void testDoubleIndirectWin(){
+		Assert.assertTrue(checker.win(books.get(0), books.get(4), votes));
+	}
+	
+	@Test
+	public void testTie(){
+		Assert.assertFalse(checker.win(books.get(0), books.get(4), votes.subList(0, 4)));
+		Assert.assertFalse(checker.lose(books.get(0), books.get(4), votes.subList(0, 4)));
+		Assert.assertTrue(checker.tie(books.get(0), books.get(4), votes.subList(0, 4)));
+	}
+
+	@Test
+	public void testIsFinished(){
+		Assert.assertTrue(checker.isFinished(books, votes));
+	}
+	
+	@Test
+	public void testNotFinished(){
+		Assert.assertFalse(checker.isFinished(books, votes.subList(0, 4)));
+	}
+
+	@Test
+	public void testTieEmptyVotes(){
+		Assert.assertTrue(checker.tie(books.get(0), books.get(1), new ArrayList<Vote>() ));
+	}
+
+	@Test
+	public void testTieWithVotes(){
+		Assert.assertTrue(checker.tie(books.get(0), books.get(4), votes.subList(0, 4) ));
+	}
+
+	@Test
+	public void testNotTie(){
+		Assert.assertFalse(checker.tie(books.get(0), books.get(4), votes ));
+	}
+	
 }
