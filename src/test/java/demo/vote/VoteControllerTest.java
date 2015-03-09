@@ -1,13 +1,17 @@
 package demo.vote;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,30 +37,45 @@ public class VoteControllerTest {
 
 	@Before
 	public void setUp() {
-		mvc = MockMvcBuilders.webAppContextSetup(
-				webApplicationContext).build();
+		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
-	// @Before
-	// public void setUp() throws Exception {
-	// mvc = MockMvcBuilders.standaloneSetup(new VoteController()).build();
-	// }
+	@Test
+	public void testGetLivros() throws Exception {
+		List<String> books = Arrays.asList("Le Comte de Monte-Cristo",
+				"The Da Vinci Code", "Le Petit Prince", "Het Achterhuis",
+				"The Perks of Being a Wallflower");
+
+		mvc.perform(get("/livros")).andExpect(status().isOk())
+				.andExpect(content().string(stringContainsInOrder(books)));
+	}
 
 	@Test
-	public void getVoteNoLivro() throws Exception {
+	public void testGetVoteNoLivro() throws Exception {
 		mvc.perform(get("/vote-no-livro"))
 				.andExpect(view().name("vote"))
 				.andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
 				.andExpect(
 						content()
-								.string(equalTo("Greetings from Spring Boot!")));
+								.contentTypeCompatibleWith(MediaType.TEXT_HTML))
+				.andExpect(
+						content().string(
+								stringContainsInOrder(Arrays.asList(
+										"Le Comte de Monte-Cristo",
+										"Le Petit Prince"))));
 	}
 
 	@Test
-	public void testListProducts() throws Exception {
-		mvc.perform(get("/livros")).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Dummy Book1")));
+	@Ignore
+	public void testPostVoteNoLivro() throws Exception {
+		mvc.perform(post("/vote-no-livro", "session_id", "book_id"))
+				.andExpect(view().name("vote"))
+				.andExpect(status().isOk())
+				.andExpect(
+						content().string(
+								stringContainsInOrder(Arrays.asList(
+										"Le Comte de Monte-Cristo",
+										"The Da Vinci Code"))));
 	}
 
 }

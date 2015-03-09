@@ -17,8 +17,12 @@ public class Vote {
 	private long id;
 
 	@ManyToOne
-	@JoinColumn(name = "book_id")
-	private Book book;
+	@JoinColumn(name = "win_id")
+	private Book winner;
+	
+	@ManyToOne
+	@JoinColumn(name = "lose_id")
+	private Book loser;
 
 	@ManyToOne
 	@JoinColumn(name = "session_id")
@@ -27,9 +31,17 @@ public class Vote {
 	protected Vote() {
 	}
 
-	public Vote(Book book, VoteSession session) {
-		this.book = book;
+	public Vote(Book win, Book lose, VoteSession session) {
+		super();
+		this.winner = win;
+		this.loser = lose;
 		this.session = session;
+	}
+
+	@Override
+	public String toString() {
+		return "Vote [id=" + id + ", win=" + winner + ", lose=" + loser
+				+ ", session=" + session + "]";
 	}
 
 	public long getId() {
@@ -40,12 +52,20 @@ public class Vote {
 		this.id = id;
 	}
 
-	public Book getBook() {
-		return book;
+	public Book getWinner() {
+		return winner;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setWinner(Book winner) {
+		this.winner = winner;
+	}
+
+	public Book getLoser() {
+		return loser;
+	}
+
+	public void setLoser(Book loser) {
+		this.loser = loser;
 	}
 
 	public VoteSession getSession() {
@@ -56,9 +76,7 @@ public class Vote {
 		this.session = session;
 	}
 
-	@Override
-	public String toString() {
-		return "Vote [id=" + id + ", book=" + book + ", session=" + session
-				+ "]";
+	public boolean isNominee(Book book){
+		return book.equals(winner) || book.equals(loser);
 	}
 }

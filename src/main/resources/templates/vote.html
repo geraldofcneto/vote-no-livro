@@ -1,10 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Vote no Livro</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vote no Livro</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    Wololo
+	<h1>Qual é o melhor livro?</h1>
+	<form action="/vote-no-livro" method="POST">
+		<div th:each="book : ${books}" >
+			<p th:text="${book.title}"></p>
+			<input type="hidden" value="session_id" />
+			<input type="submit" name="book_id" th:value="${book.id}" />
+		</div>
+	</form>
 </body>
 </html>

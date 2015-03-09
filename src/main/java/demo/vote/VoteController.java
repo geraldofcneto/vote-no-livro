@@ -1,9 +1,13 @@
 package demo.vote;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import demo.book.Book;
@@ -30,17 +34,30 @@ public class VoteController {
 		return "books";
 	}
 
-	@RequestMapping("/vote-no-livro")
-	public String vote(
-			@RequestParam(value = "sessionId", required = false, defaultValue = "") String sessionId,
+	@RequestMapping(value = "/vote-no-livro", method = RequestMethod.GET)
+	public String getVote(
+			@RequestParam(value = "session_id", required = false, defaultValue = "") String sessionId,
 			Model model) {
 
-		model.addAttribute("sessionId", sessionId);
+		List<Book> books = Arrays.asList(
+				bookRepository.title("Le Comte de Monte-Cristo"),
+				bookRepository.title("Le Petit Prince"));
+
+		model.addAttribute("books", books);
+		model.addAttribute("session_id", sessionId);
 
 		return "vote";
 	}
 
-	public void vote() {
-		
+	@RequestMapping(value = "/vote-no-livro", method = RequestMethod.POST)
+	public String postVote(
+			@RequestParam(value = "session_id", required = true) String sessionId,
+			@RequestParam(value = "book_id", required = true) Long bookId,
+			Model model) {
+
+		model.addAttribute("session_id", sessionId);
+		model.addAttribute("book_id", bookId);
+
+		return "vote-result";
 	}
 }
