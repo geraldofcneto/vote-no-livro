@@ -43,13 +43,21 @@ public class BookComparator implements Comparator<Book> {
 
 	}
 
-	public boolean isTied() {
+	public Set<Book> getTied(){
+		Set<Book> tied = new HashSet<>();
+		
 		for (int i = 0; i < books.size(); i++)
 			for (int j = i + 1; j < books.size(); j++)
-				if (tie(books.get(i), books.get(j)))
-					return true;
-
-		return false;
+				if (tie(books.get(i), books.get(j))){
+					tied.add(books.get(i));
+					tied.add(books.get(j));
+				}
+		
+		return tied;
+	}
+	
+	public boolean isTied() {
+		return !getTied().isEmpty();
 	}
 
 	protected boolean win(Book winner, Book loser) {

@@ -2,6 +2,7 @@ package demo.vote;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Assert;
@@ -74,6 +75,11 @@ public class BookComparatorTest {
 	@Test
 	public void testDoubleIndirectWin(){
 		Assert.assertTrue(finishedComparator.win(books.get(0), books.get(4)));
+	}
+
+	@Test
+	public void testTiedSet(){
+		Assert.assertEquals(new HashSet<>(books), new BookComparator(books, new ArrayList<Vote>()).getTied());
 	}
 
 }
