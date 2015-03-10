@@ -8,7 +8,7 @@ import java.util.Set;
 
 import demo.book.Book;
 
-public class VoteSessionChecker {
+public class VoteSessionHandler {
 
 	public boolean isFinished(List<Book> books, List<Vote> votes) {
 		return !new BookComparator(new ArrayList<>(books), votes).isTied();
@@ -30,8 +30,6 @@ public class VoteSessionChecker {
 		}
 		return new ArrayList<>(books);
 	}
-
-	public Nominees getTied (){
-		return new Nominees(null, null);
-	}
+	
+	
 }

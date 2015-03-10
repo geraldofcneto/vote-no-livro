@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import demo.book.Book;
 
-public class VoteSessionCheckerTest {
+public class VoteSessionHandlerTest {
 
-	VoteSessionChecker checker = new VoteSessionChecker();
+	VoteSessionHandler checker = new VoteSessionHandler();
 	
 	private List<Vote> votes;
 	private List<Book> books;
