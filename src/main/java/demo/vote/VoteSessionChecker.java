@@ -11,9 +11,7 @@ import demo.book.Book;
 public class VoteSessionChecker {
 
 	public boolean isFinished(List<Book> books, List<Vote> votes) {
-		BookComparator bookComparator = new BookComparator(new ArrayList<>(books), votes);
-		
-		return !bookComparator.isTied();
+		return !new BookComparator(new ArrayList<>(books), votes).isTied();
 	}
 
 	public List<Book> sort(List<Vote> votes) {
@@ -33,40 +31,7 @@ public class VoteSessionChecker {
 		return new ArrayList<>(books);
 	}
 
-	
-	
-	// Recursivo
-	public boolean win(Book winner, Book loser, List<Vote> votes) {
-		return directWin(winner, loser, votes) || indirectWin(winner, loser, votes);
+	public Nominees getTied (){
+		return new Nominees(null, null);
 	}
-
-	public boolean lose (Book loser, Book winner, List<Vote> votes){
-		return directWin(loser, winner, votes) || indirectWin(loser, winner, votes);
-	}
-	
-	public boolean tie(Book b1, Book b2, List<Vote> votes){
-		return !win(b1, b2, votes) && !lose(b1, b2, votes);
-	}
-	
-	private boolean directWin(Book winner, Book loser, List<Vote> votes) {
-		for (Vote vote : votes)
-			if (vote.getWinner().equals(winner) && vote.getLoser().equals(loser))
-				return true;
-
-		return false;
-	}
-
-	private boolean indirectWin(Book winner, Book loser, List<Vote> votes) {
-		for (Vote vote : votes)
-			if (vote.getWinner().equals(winner)) {
-				Book intermediate = vote.getLoser();
-				if (directWin(winner, intermediate, votes)
-						&& win(intermediate, loser, votes))
-					return true;
-			}
-
-		return false;
-	}
-
-
 }

@@ -1,4 +1,4 @@
-package demo.vote;
+package demo.vote.web;
 
 import java.util.Arrays;
 import java.util.List;
