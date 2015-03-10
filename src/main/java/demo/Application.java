@@ -9,13 +9,13 @@ import demo.book.Book;
 import demo.book.BookRepository;
 
 @SpringBootApplication
-public class DemoApplication implements CommandLineRunner {
+public class Application implements CommandLineRunner {
 
     @Autowired
     BookRepository repository;
 	
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 	@Override
