@@ -1,6 +1,7 @@
 package demo.vote;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -43,21 +44,34 @@ public class BookComparator implements Comparator<Book> {
 
 	}
 
-	public Set<Book> getTied(){
+	public Set<Book> getTied() {
 		Set<Book> tied = new HashSet<>();
-		
+
 		for (int i = 0; i < books.size(); i++)
 			for (int j = i + 1; j < books.size(); j++)
-				if (tie(books.get(i), books.get(j))){
+				if (tie(books.get(i), books.get(j))) {
 					tied.add(books.get(i));
 					tied.add(books.get(j));
 				}
-		
+
 		return tied;
 	}
-	
+
+	public Set<Book> getFirstTied() {
+		for (int i = 0; i < books.size(); i++)
+			for (int j = i + 1; j < books.size(); j++)
+				if (tie(books.get(i), books.get(j))) {
+					Set<Book> tied = new HashSet<>();
+					tied.add(books.get(i));
+					tied.add(books.get(j));
+					return tied;
+				}
+
+		return Collections.emptySet();
+	}
+
 	public boolean isTied() {
-		return !getTied().isEmpty();
+		return !getFirstTied().isEmpty();
 	}
 
 	protected boolean win(Book winner, Book loser) {

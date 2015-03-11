@@ -1,5 +1,6 @@
 package demo.vote;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,22 +12,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import demo.DemoApplication;
+import demo.Application;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DemoApplication.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 public class VoteControllerTest {
 
@@ -56,26 +55,20 @@ public class VoteControllerTest {
 				.andExpect(view().name("vote"))
 				.andExpect(status().isOk())
 				.andExpect(
-						content()
-								.contentTypeCompatibleWith(MediaType.TEXT_HTML))
+						content().string(containsString("Le Comte de Monte-Cristo")))
 				.andExpect(
-						content().string(
-								stringContainsInOrder(Arrays.asList(
-										"Le Comte de Monte-Cristo",
-										"Le Petit Prince"))));
+						content().string(containsString("The Da Vinci Code")));
 	}
 
 	@Test
-	@Ignore
 	public void testPostVoteNoLivro() throws Exception {
-		mvc.perform(post("/vote-no-livro", "session_id", "book_id"))
+		mvc.perform(post("/vote-no-livro").param("winner_book_id", "1").param("loser_book_id", "2").param("session_id", "1"))
 				.andExpect(view().name("vote"))
 				.andExpect(status().isOk())
 				.andExpect(
-						content().string(
-								stringContainsInOrder(Arrays.asList(
-										"Le Comte de Monte-Cristo",
-										"The Da Vinci Code"))));
+						content().string(containsString("Le Comte de Monte-Cristo")))
+				.andExpect(
+						content().string(containsString("Le Petit Prince")));
 	}
 
 }

@@ -82,4 +82,9 @@ public class BookComparatorTest {
 		Assert.assertEquals(new HashSet<>(books), new BookComparator(books, new ArrayList<Vote>()).getTied());
 	}
 
+	@Test
+	public void testFirstTiedSet(){
+		Assert.assertEquals(new HashSet<>(books.subList(0, 2)), new BookComparator(books, new ArrayList<Vote>()).getFirstTied());
+	}
+
 }

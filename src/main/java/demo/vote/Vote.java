@@ -41,7 +41,7 @@ public class Vote {
 	@Override
 	public String toString() {
 		return "Vote [id=" + id + ", win=" + winner + ", lose=" + loser
-				+ ", session=" + session + "]";
+				+ ", session=" + session.getId() + "]";
 	}
 
 	public long getId() {
