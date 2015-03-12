@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import java.util.ArrayList;
 import java.util.List;

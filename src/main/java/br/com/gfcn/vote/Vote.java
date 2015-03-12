@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import demo.book.Book;
+import br.com.gfcn.book.Book;
 
 @Entity
 public class Vote {

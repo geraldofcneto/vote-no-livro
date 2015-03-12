@@ -1,4 +1,4 @@
-package demo.book;
+package br.com.gfcn.book;
 
 import org.springframework.data.repository.CrudRepository;
 

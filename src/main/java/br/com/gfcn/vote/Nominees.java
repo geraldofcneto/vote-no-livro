@@ -1,6 +1,6 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
-import demo.book.Book;
+import br.com.gfcn.book.Book;
 
 public class Nominees {
 

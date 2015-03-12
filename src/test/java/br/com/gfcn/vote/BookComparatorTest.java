@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import demo.book.Book;
+import br.com.gfcn.book.Book;
+import br.com.gfcn.vote.BookComparator;
+import br.com.gfcn.vote.Vote;
+import br.com.gfcn.vote.VoteSession;
 
 public class BookComparatorTest {
 

@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import org.springframework.data.repository.CrudRepository;
 

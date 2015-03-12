@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -9,7 +9,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import demo.book.Book;
+import br.com.gfcn.book.Book;
+import br.com.gfcn.vote.Vote;
+import br.com.gfcn.vote.VoteSession;
+import br.com.gfcn.vote.VoteSessionHandler;
 
 public class VoteSessionHandlerTest {
 

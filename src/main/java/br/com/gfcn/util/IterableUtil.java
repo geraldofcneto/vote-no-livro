@@ -1,4 +1,4 @@
-package demo.util;
+package br.com.gfcn.util;
 
 import java.util.ArrayList;
 import java.util.List;

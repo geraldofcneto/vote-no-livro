@@ -1,4 +1,4 @@
-package demo;
+package br.com.gfcn;
 
 import java.util.List;
 
@@ -7,12 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import demo.book.Book;
-import demo.book.BookRepository;
-import demo.vote.Vote;
-import demo.vote.VoteRepository;
-import demo.vote.VoteSession;
-import demo.vote.VoteSessionRepository;
+import br.com.gfcn.book.Book;
+import br.com.gfcn.book.BookRepository;
+import br.com.gfcn.vote.Vote;
+import br.com.gfcn.vote.VoteRepository;
+import br.com.gfcn.vote.VoteSession;
+import br.com.gfcn.vote.VoteSessionRepository;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {

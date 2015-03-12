@@ -1,8 +1,10 @@
-package demo.book;
+package br.com.gfcn.book;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import br.com.gfcn.book.Book;
 
 public class BookTest {
 

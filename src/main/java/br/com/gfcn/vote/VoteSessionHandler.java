@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,9 +9,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import demo.book.Book;
-import demo.book.BookRepository;
-import demo.util.IterableUtil;
+import br.com.gfcn.book.Book;
+import br.com.gfcn.book.BookRepository;
+import br.com.gfcn.util.IterableUtil;
 
 @Component
 public class VoteSessionHandler {

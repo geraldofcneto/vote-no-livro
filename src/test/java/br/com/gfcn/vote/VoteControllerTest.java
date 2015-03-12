@@ -1,4 +1,4 @@
-package demo.vote;
+package br.com.gfcn.vote;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -16,13 +16,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import demo.Application;
+import br.com.gfcn.Application;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -55,20 +56,30 @@ public class VoteControllerTest {
 				.andExpect(view().name("vote"))
 				.andExpect(status().isOk())
 				.andExpect(
-						content().string(containsString("Le Comte de Monte-Cristo")))
+						content().string(
+								containsString("Le Comte de Monte-Cristo")))
 				.andExpect(
 						content().string(containsString("The Da Vinci Code")));
 	}
 
 	@Test
-	public void testPostVoteNoLivro() throws Exception {
-		mvc.perform(post("/vote-no-livro").param("winner_book_id", "1").param("loser_book_id", "2").param("session_id", "1"))
-				.andExpect(view().name("vote"))
+	public void testGetJsonVoteNoLivro() throws Exception {
+		mvc.perform(get("/api/vote-no-livro"))
 				.andExpect(status().isOk())
 				.andExpect(
-						content().string(containsString("Le Comte de Monte-Cristo")))
+						content().contentTypeCompatibleWith(
+								MediaType.APPLICATION_JSON))
 				.andExpect(
-						content().string(containsString("Le Petit Prince")));
-	}
+						content()
+								.string(containsString("\"session\":{\"id\":2,\"votes\":[]}")))
+				.andExpect(
+						content()
+								.string(containsString("{\"id\":1,\"title\":\"Le Comte de Monte-Cristo\",\"author\":\"Alexandre Dumas, pére\"}")))
+				.andExpect(
+						content()
+								.string(containsString("{\"id\":2,\"title\":\"The Da Vinci Code\",\"author\":\"Dan Brown\"}")))
+				.andExpect(
+						content().string(containsString("\"finished\":false}")));
 
+	}
 }
