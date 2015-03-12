@@ -37,7 +37,10 @@
 			
 			console.log(JSON.stringify(request));
 			
-			$http(request).success(loadNominees).error(function (e){
+			$http(request).success(function(data){
+				console.log('votou: ' + JSON.stringify(data));
+				getNominees();
+			}).error(function (e){
 				console.log('Error: '+JSON.stringify(e));
 			}); 
 		};

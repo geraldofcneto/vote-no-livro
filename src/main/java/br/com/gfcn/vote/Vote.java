@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import br.com.gfcn.book.Book;
 
 @Entity
@@ -26,6 +28,7 @@ public class Vote {
 
 	@ManyToOne
 	@JoinColumn(name = "session_id")
+	@JsonBackReference("vote-session")
 	private VoteSession session;
 
 	protected Vote() {
