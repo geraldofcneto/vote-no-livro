@@ -20,6 +20,8 @@ import br.com.gfcn.vote.VoteSessionHandler;
 import br.com.gfcn.vote.VoteSessionRepository;
 import br.com.gfcn.vote.rest.Request;
 import br.com.gfcn.vote.rest.NomineesResponse;
+import br.com.gfcn.vote.rest.Response;
+import br.com.gfcn.vote.rest.VoteResponse;
 
 @Controller
 public class VoteController {
@@ -77,25 +79,25 @@ public class VoteController {
 	}
 
 	@RequestMapping(value = "/api/vote-no-livro", method=RequestMethod.GET)
-	public @ResponseBody NomineesResponse getJson(@RequestParam(value="session_id", required=true, defaultValue="") String sessionId){
+	public @ResponseBody Response getJson(@RequestParam(value="session_id", required=true, defaultValue="") String sessionId){
 		return createResponse(sessionId);
 	}
 
 	@RequestMapping(value = "/api/vote-no-livro", method=RequestMethod.POST)
-	public @ResponseBody NomineesResponse postJson(@RequestBody Request request){
+	public @ResponseBody Response postJson(@RequestBody Request request){
 		System.out.println("Request: " +request);
 		
 		voteRepository.save(new Vote(request.getWinner(), request.getLoser(), request.getSession()));
 		
-		return createResponse(request.getSession());
+		return new VoteResponse(voteSessionRepository.findOne(request.getSession().getId()));
 	}
 
-	private NomineesResponse createResponse(VoteSession session) {
+	private Response createResponse(VoteSession session) {
 		Set<Book> books = findNominees(session);
 		return new NomineesResponse(session, books);
 	}
 
-	private NomineesResponse createResponse(String sessionId) {
+	private Response createResponse(String sessionId) {
 		return createResponse(findOrCreateSession(sessionId));
 	}
 }

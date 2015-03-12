@@ -18,7 +18,7 @@
 					session_id : session.id 
 				}
 			}).success(loadNominees).error(function (e){
-				console.log('Error: '+e);
+				console.log('Error: '+JSON.stringify(e));
 			}); 
 		};
 		
@@ -38,7 +38,7 @@
 			console.log(JSON.stringify(request));
 			
 			$http(request).success(function(data){
-				console.log('votou: ' + JSON.stringify(data));
+				console.log('Voted: ' + JSON.stringify(data));
 				getNominees();
 			}).error(function (e){
 				console.log('Error: '+JSON.stringify(e));

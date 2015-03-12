@@ -5,30 +5,20 @@ import java.util.Set;
 import br.com.gfcn.book.Book;
 import br.com.gfcn.vote.VoteSession;
 
-public class NomineesResponse {
+public class NomineesResponse extends Response {
 
-	VoteSession session;
 	Set<Book> nominees;
-	Boolean finished;
-
+	
 	public NomineesResponse(VoteSession session, Set<Book> nominees, Boolean finished) {
-		this.session = session;
+		super(session);
 		this.nominees = nominees;
 		this.finished = finished;
 	}
 
 	public NomineesResponse(VoteSession session, Set<Book> nominees) {
-		this.session = session;
+		super(session);
 		this.nominees = nominees;
 		this.finished = nominees.isEmpty();
-	}
-
-	public VoteSession getSession() {
-		return session;
-	}
-
-	public void setSession(VoteSession session) {
-		this.session = session;
 	}
 
 	public Set<Book> getNominees() {

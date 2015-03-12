@@ -12,10 +12,10 @@ var mostra = function(a){
 </script>
 	<h1>Qual é o melhor livro?</h1>
 	<form action="/vote-no-livro" method="POST">
-		<div th:each="book : ${books}" onclick="mostra(this)">
-			<p th:text="${book.title}"></p>
+		<div th:each="nominee : ${nominees}" onclick="mostra(this)">
+			<p th:text="${nominee.title}"></p>
 			<input type="hidden" value="session_id" />
-			<input type="submit" name="book_id" th:value="${book.id}" />
+			<input type="submit" name="book_id" th:value="${nominee.id}" />
 		</div>
 	</form>
 </body>
