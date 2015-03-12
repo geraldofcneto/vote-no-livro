@@ -20,6 +20,9 @@ public class VoteSessionHandler {
 	VoteSessionRepository voteSessionRepository;
 
 	@Autowired
+	VoteSessionResultRepository voteSessionResultRepository;
+	
+	@Autowired
 	BookRepository bookRepository;
 
 	public boolean isFinished(List<Book> books, List<Vote> votes) {
@@ -50,8 +53,8 @@ public class VoteSessionHandler {
 	public Set<Book> tied(Long sessionId) {
 		List<Vote> votes = voteSessionRepository.findOne(sessionId).getVotes();
 
-		List<Book> books = new ArrayList<>(
-				IterableUtil.makeList(bookRepository.findAll()));
+		List<Book> books = new ArrayList<>(IterableUtil.makeList(bookRepository
+				.findAll()));
 
 		BookComparator bookComparator = new BookComparator(books, votes);
 
@@ -60,8 +63,25 @@ public class VoteSessionHandler {
 
 	public boolean isFinished(List<Book> books, VoteSession session) {
 		List<Vote> votes = session.getVotes();
-		
+
 		return isFinished(books, votes);
+	}
+
+	public boolean isFinished(VoteSession session) {
+		List<Vote> votes = session.getVotes();
+		List<Book> books = IterableUtil.makeList(bookRepository.findAll());
+		return isFinished(books, votes);
+	}
+
+	
+	public void verifySessionEnded(VoteSession session) {
+		if (isFinished(session)) {
+			List<Book> sortedBooks = sort(session.getVotes());
+			for (int i = 0; i < sortedBooks.size(); i++) {
+				voteSessionResultRepository.save(new VoteSessionResult(session,
+						sortedBooks, i));
+			}
+		}
 	}
 
 }

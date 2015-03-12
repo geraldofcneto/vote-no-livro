@@ -25,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import br.com.gfcn.Application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -82,4 +84,20 @@ public class VoteControllerTest {
 						content().string(containsString("\"finished\":false}")));
 
 	}
+	
+	@Test
+	public void testSorting() throws Exception {
+		mvc.perform(post("/api/vote-no-livro").content(asJsonString(new Vote())));
+	}
+	
+	public static String asJsonString(final Object obj) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			final String jsonContent = mapper.writeValueAsString(obj);
+			return jsonContent;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }

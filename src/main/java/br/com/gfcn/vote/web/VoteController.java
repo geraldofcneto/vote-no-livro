@@ -18,7 +18,6 @@ import br.com.gfcn.vote.VoteRepository;
 import br.com.gfcn.vote.VoteSession;
 import br.com.gfcn.vote.VoteSessionHandler;
 import br.com.gfcn.vote.VoteSessionRepository;
-import br.com.gfcn.vote.rest.Request;
 import br.com.gfcn.vote.rest.NomineesResponse;
 import br.com.gfcn.vote.rest.Response;
 import br.com.gfcn.vote.rest.VoteResponse;
@@ -61,10 +60,9 @@ public class VoteController {
 
 		Set<Book> books = findNominees(session);
 
-		
 		model.addAttribute("nominees", books);
 		model.addAttribute("session_id", session.getId());
-		
+
 		return "vote";
 	}
 
@@ -73,31 +71,37 @@ public class VoteController {
 	}
 
 	private VoteSession findOrCreateSession(String sessionId) {
-		return sessionId.isEmpty() ? 
-				voteSessionRepository.save(new VoteSession()) : 
-				voteSessionRepository.findOne(Long.parseLong(sessionId));
+		return sessionId.isEmpty() ? voteSessionRepository
+				.save(new VoteSession()) : voteSessionRepository.findOne(Long
+				.parseLong(sessionId));
 	}
 
-	@RequestMapping(value = "/api/vote-no-livro", method=RequestMethod.GET)
-	public @ResponseBody Response getJson(@RequestParam(value="session_id", required=true, defaultValue="") String sessionId){
+	@RequestMapping(value = "/api/vote-no-livro", method = RequestMethod.GET)
+	public @ResponseBody Response getJson(
+			@RequestParam(value = "session_id", required = true, defaultValue = "") String sessionId) {
 		return createResponse(sessionId);
 	}
 
-	@RequestMapping(value = "/api/vote-no-livro", method=RequestMethod.POST)
-	public @ResponseBody Response postJson(@RequestBody Request request){
-		System.out.println("Request: " +request);
-		
-		voteRepository.save(new Vote(request.getWinner(), request.getLoser(), request.getSession()));
-		
-		return new VoteResponse(voteSessionRepository.findOne(request.getSession().getId()));
+	@RequestMapping(value = "/api/vote-no-livro", method = RequestMethod.POST)
+	public @ResponseBody Response postJson(@RequestBody Vote request) {
+		System.out.println("Request: " + request);
+
+		voteRepository.save(new Vote(request.getWinner(), request.getLoser(),
+				request.getSession()));
+
+		VoteSession updatedSession = updatedSession(request.getSession());
+		voteSessionHandler.verifySessionEnded(updatedSession);
+
+		return new VoteResponse(updatedSession);
 	}
 
-	private Response createResponse(VoteSession session) {
-		Set<Book> books = findNominees(session);
-		return new NomineesResponse(session, books);
+	private VoteSession updatedSession(VoteSession session) {
+		return voteSessionRepository.findOne(session.getId());
 	}
 
 	private Response createResponse(String sessionId) {
-		return createResponse(findOrCreateSession(sessionId));
+		VoteSession session = findOrCreateSession(sessionId);
+		Set<Book> books = findNominees(session);
+		return new NomineesResponse(session, books);
 	}
 }
