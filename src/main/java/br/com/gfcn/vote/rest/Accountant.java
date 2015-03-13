@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.gfcn.book.Book;
 import br.com.gfcn.book.BookRepository;
+import br.com.gfcn.util.JsonUtil;
 import br.com.gfcn.vote.VoteSessionResult;
 import br.com.gfcn.vote.VoteSessionResultRepository;
 
@@ -21,10 +22,11 @@ public class Accountant {
 	@Autowired
 	BookRepository bookRepository;
 	
-	public Map<Book, Long> count() {
-		Map<Book, Long> map = new HashMap<>();
+	public Map<String, Long> count() {
+		Map<String, Long> map = new HashMap<>();
 		for (Book book : books()) {
-			map.put(book, votesFor(book));
+			
+			map.put(JsonUtil.asJsonString(book), votesFor(book));
 		}
 		return map;
 	}
@@ -45,5 +47,5 @@ public class Accountant {
 	private long numberOfBooks() {
 		return bookRepository.count();
 	}
-	
+
 }
