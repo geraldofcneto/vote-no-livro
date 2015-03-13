@@ -2,7 +2,7 @@ package br.com.gfcn.vote.rest;
 
 import br.com.gfcn.vote.VoteSession;
 
-public class Response {
+public abstract class Response {
 
 	protected VoteSession session;
 	protected Boolean finished;

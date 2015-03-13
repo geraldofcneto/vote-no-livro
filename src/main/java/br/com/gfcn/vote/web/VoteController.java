@@ -21,6 +21,7 @@ import br.com.gfcn.vote.VoteSessionRepository;
 import br.com.gfcn.vote.rest.NomineesResponse;
 import br.com.gfcn.vote.rest.Response;
 import br.com.gfcn.vote.rest.VoteResponse;
+import br.com.gfcn.vote.rest.VoteResultResponse;
 
 @Controller
 public class VoteController {
@@ -83,14 +84,20 @@ public class VoteController {
 	}
 
 	@RequestMapping(value = "/api/vote-no-livro", method = RequestMethod.POST)
-	public @ResponseBody Response postJson(@RequestBody Vote request) {
-		System.out.println("Request: " + request);
+	public @ResponseBody Response postJson(@RequestBody Vote vote) {
+		System.out.println("Request: " + vote);
 
-		voteRepository.save(new Vote(request.getWinner(), request.getLoser(),
-				request.getSession()));
+		vote = voteRepository.save(vote);
 
-		VoteSession updatedSession = updatedSession(request.getSession());
-		voteSessionHandler.verifySessionEnded(updatedSession);
+		return response(vote);
+	}
+
+	private Response response(Vote vote) {
+		VoteSession updatedSession = updatedSession(vote.getSession());
+		
+		if (voteSessionHandler.handleFinished(updatedSession)){
+			return new VoteResultResponse(updatedSession);
+		}
 
 		return new VoteResponse(updatedSession);
 	}

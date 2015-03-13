@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -23,6 +24,9 @@ public class VoteSession {
 	@JsonManagedReference("vote-session")
 	private List<Vote> votes = new ArrayList<Vote>();
 
+	@OneToOne
+	private VoteSessionResult result;
+	
 	public long getId() {
 		return id;
 	}
@@ -37,6 +41,14 @@ public class VoteSession {
 
 	public void setVotes(List<Vote> votes) {
 		this.votes = votes;
+	}
+
+	public VoteSessionResult getResult() {
+		return result;
+	}
+
+	public void setResult(VoteSessionResult result) {
+		this.result = result;
 	}
 
 	@Override

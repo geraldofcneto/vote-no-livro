@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import br.com.gfcn.Application;
+import br.com.gfcn.book.BookRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,6 +36,15 @@ public class VoteControllerTest {
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+
+	@Autowired
+	private BookRepository bookRepository;
+
+	@Autowired
+	private VoteSessionRepository voteSessionRepository;
+
+	@Autowired
+	private VoteSessionHandler voteSessionHandler;
 
 	private MockMvc mvc;
 
@@ -73,23 +84,50 @@ public class VoteControllerTest {
 								MediaType.APPLICATION_JSON))
 				.andExpect(
 						content()
-								.string(containsString("\"session\":{\"id\":2,\"votes\":[]}")))
+								.string(containsString("\"session\":{\"id\":2,\"votes\":[],\"result\":null}")))
 				.andExpect(
 						content()
 								.string(containsString("{\"id\":1,\"title\":\"Le Comte de Monte-Cristo\",\"author\":\"Alexandre Dumas, pére\"}")))
 				.andExpect(
 						content()
-								.string(containsString("{\"id\":2,\"title\":\"The Da Vinci Code\",\"author\":\"Dan Brown\"}")))
-				.andExpect(
-						content().string(containsString("\"finished\":false}")));
+								.string(containsString("{\"id\":2,\"title\":\"The Da Vinci Code\",\"author\":\"Dan Brown\"}")));
 
 	}
-	
+
 	@Test
 	public void testSorting() throws Exception {
-		mvc.perform(post("/api/vote-no-livro").content(asJsonString(new Vote())));
+		VoteSession session = voteSessionRepository.save(new VoteSession());
+
+		postVote(1l, 2l, session);
+//		postVote(1l, 3l, session);
+//		postVote(1l, 4l, session);
+//		postVote(1l, 5l, session);
+//		postVote(2l, 3l, session);
+//		postVote(2l, 4l, session);
+//		postVote(2l, 5l, session);
+//		postVote(3l, 4l, session);
+//		postVote(3l, 5l, session);
+//		postVote(4l, 5l, session);
+
+		session = voteSessionRepository.findOne(session.getId());
+
+		System.out.println(session);
+
+		Assert.assertTrue(voteSessionHandler.isFinished(session));
 	}
-	
+
+	private void postVote(long win, long lose, VoteSession session)
+			throws Exception {
+		String json = "{\"session\":{\"id\":2,\"votes\":[],\"result\":null},"
+				+ "\"winner\":{\"id\":1,\"title\":\"Le Comte de Monte-Cristo\",\"author\":\"Alexandre Dumas, pére\",\"$$hashKey\":\"object:3\"},"
+				+ "\"loser\":{\"id\":2,\"title\":\"The Da Vinci Code\",\"author\":\"Dan Brown\",\"$$hashKey\":\"object:4\"}}";
+
+		
+		
+		mvc.perform(post("/api/vote-no-livro").content(json).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().string("bla"));
+	}
+
 	public static String asJsonString(final Object obj) {
 		try {
 			final ObjectMapper mapper = new ObjectMapper();
@@ -99,5 +137,5 @@ public class VoteControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

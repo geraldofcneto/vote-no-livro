@@ -74,13 +74,19 @@ public class VoteSessionHandler {
 	}
 
 	
-	public void verifySessionEnded(VoteSession session) {
+	public boolean handleFinished(VoteSession session) {
 		if (isFinished(session)) {
-			List<Book> sortedBooks = sort(session.getVotes());
-			for (int i = 0; i < sortedBooks.size(); i++) {
-				voteSessionResultRepository.save(new VoteSessionResult(session,
-						sortedBooks, i));
-			}
+			saveSessionResult(session);
+			return true;
+		}
+		return false;
+	}
+
+	private void saveSessionResult(VoteSession session) {
+		List<Book> sortedBooks = sort(session.getVotes());
+		for (int i = 0; i < sortedBooks.size(); i++) {
+			voteSessionResultRepository.save(new VoteSessionResult(session,
+					sortedBooks, i));
 		}
 	}
 
