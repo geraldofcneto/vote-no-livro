@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +25,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import br.com.gfcn.Application;
-import br.com.gfcn.book.Book;
 import br.com.gfcn.book.BookRepository;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.gfcn.util.JsonUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -66,18 +63,6 @@ public class VoteControllerTest {
 
 		mvc.perform(get("/livros")).andExpect(status().isOk())
 				.andExpect(content().string(stringContainsInOrder(books)));
-	}
-
-	@Test
-	public void testGetVoteNoLivro() throws Exception {
-		mvc.perform(get("/vote-no-livro"))
-				.andExpect(view().name("vote"))
-				.andExpect(status().isOk())
-				.andExpect(
-						content().string(
-								containsString("Le Comte de Monte-Cristo")))
-				.andExpect(
-						content().string(containsString("The Da Vinci Code")));
 	}
 
 	@Test
@@ -118,73 +103,19 @@ public class VoteControllerTest {
 
 		Assert.assertTrue(voteSessionHandler.isFinished(session));
 
-		
 		Assert.assertEquals(5, voteSessionResultRepository.count());
 	}
 
 	private ResultActions postVote(long win, long lose, VoteSession session)
 			throws Exception {
-		String asJsonString = asJsonString(new Request(
-				bookRepository.findOne(win), bookRepository.findOne(lose),
-				session));
-
 		return mvc.perform(
-				post("/api/vote-no-livro").content(asJsonString).contentType(
+				post("/api/vote-no-livro").content(jsonRequestData(win, lose, session)).contentType(
 						MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
-	public static String asJsonString(final Object obj) {
-		try {
-			final ObjectMapper mapper = new ObjectMapper();
-			final String jsonContent = mapper.writeValueAsString(obj);
-			return jsonContent;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	class Request {
-
-		private Book winner;
-		private Book loser;
-		private VoteSession session;
-
-		public Request(Book win, Book lose, VoteSession session) {
-			this.winner = win;
-			this.loser = lose;
-			this.session = session;
-		}
-
-		public Book getWinner() {
-			return winner;
-		}
-
-		public void setWinner(Book winner) {
-			this.winner = winner;
-		}
-
-		public Book getLoser() {
-			return loser;
-		}
-
-		public void setLoser(Book loser) {
-			this.loser = loser;
-		}
-
-		public VoteSession getSession() {
-			return session;
-		}
-
-		public void setSession(VoteSession session) {
-			this.session = session;
-		}
-
-		@Override
-		public String toString() {
-			return "Request [winner=" + winner + ", loser=" + loser
-					+ ", session=" + session.getId() + "]";
-		}
-
+	private String jsonRequestData(long win, long lose, VoteSession session) {
+		return JsonUtil.asJsonString(new Request(
+		bookRepository.findOne(win), bookRepository.findOne(lose), session));
 	}
 
 }

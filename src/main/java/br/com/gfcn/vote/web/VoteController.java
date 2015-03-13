@@ -58,20 +58,6 @@ public class VoteController {
 		return "books";
 	}
 
-	@RequestMapping(value = "/vote-no-livro", method = RequestMethod.GET)
-	public String getVote(
-			@RequestParam(value = "session_id", required = false, defaultValue = "") String sessionId,
-			Model model) {
-		VoteSession session = findOrCreateSession(sessionId);
-
-		Set<Book> books = findNominees(session);
-
-		model.addAttribute("nominees", books);
-		model.addAttribute("session_id", session.getId());
-
-		return "vote";
-	}
-
 	private Set<Book> findNominees(VoteSession session) {
 		return voteSessionHandler.tied(session.getId());
 	}
@@ -98,8 +84,8 @@ public class VoteController {
 	}
 
 	@RequestMapping(value = "/api/final-counting", method = RequestMethod.GET)
-	public @ResponseBody Map<Book, Long> getFinalCounting() {
-		return accountant.count();
+	public @ResponseBody Map<String, Long> getFinalCounting() {
+		return (accountant.count());
 	}
 
 	private Response response(Vote vote) {
