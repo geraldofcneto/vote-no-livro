@@ -93,13 +93,11 @@ public class VoteController {
 	}
 
 	private Response response(Vote vote) {
-		VoteSession updatedSession = updatedSession(vote.getSession());
-		
-		if (voteSessionHandler.handleFinished(updatedSession)){
-			return new VoteResultResponse(updatedSession);
+		if (voteSessionHandler.handleFinished(updatedSession(vote.getSession()))){
+			return new VoteResultResponse(updatedSession(vote.getSession()));
 		}
 
-		return new VoteResponse(updatedSession);
+		return new VoteResponse(updatedSession(vote.getSession()));
 	}
 
 	private VoteSession updatedSession(VoteSession session) {

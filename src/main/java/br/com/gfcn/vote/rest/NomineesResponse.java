@@ -39,7 +39,7 @@ public class NomineesResponse extends Response {
 
 	@Override
 	public String toString() {
-		return "Response [session=" + session + ", nominees=" + nominees
+		return "Response [session=" + session.getId() + ", nominees=" + nominees
 				+ ", finished=" + finished + "]";
 	}
 

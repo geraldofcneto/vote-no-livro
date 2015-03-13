@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 @Entity
 public class Book {
 
@@ -54,7 +57,25 @@ public class Book {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return toString().equals(obj.toString());
+	public int hashCode(){
+	    return new HashCodeBuilder()
+	        .append(id)
+	        .append(title)
+	        .append(author)
+	        .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj){
+	    if(obj instanceof Book){
+	        final Book other = (Book) obj;
+	        return new EqualsBuilder()
+	            .append(id, other.id)
+	            .append(title, other.title)
+	            .append(author, other.author)
+	            .isEquals();
+	    } else{
+	        return false;
+	    }
 	}
 }

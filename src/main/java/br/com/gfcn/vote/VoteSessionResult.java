@@ -1,12 +1,9 @@
 package br.com.gfcn.vote;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import br.com.gfcn.book.Book;
@@ -21,17 +18,17 @@ public class VoteSessionResult {
 	@OneToOne
 	private VoteSession session;
 	
-	@OneToMany
-	private List<Book> sortedBooks;
+	@OneToOne
+	private Book book;
 	
 	private int position;
 
 	protected VoteSessionResult() {
 	}
 	
-	public VoteSessionResult(VoteSession session, List<Book> sortedBooks, int position) {
+	public VoteSessionResult(VoteSession session, Book book, int position) {
 		this.session = session;
-		this.sortedBooks = sortedBooks;
+		this.book = book;
 		this.position = position;
 	}
 
@@ -43,14 +40,6 @@ public class VoteSessionResult {
 		this.session = session;
 	}
 
-	public List<Book> getSortedBooks() {
-		return sortedBooks;
-	}
-
-	public void setSortedBooks(List<Book> sortedBooks) {
-		this.sortedBooks = sortedBooks;
-	}
-
 	public int getPosition() {
 		return position;
 	}
@@ -59,11 +48,27 @@ public class VoteSessionResult {
 		this.position = position;
 	}
 
-	@Override
-	public String toString() {
-		return "VoteSessionResult [id=" + id + ", session=" + session
-				+ ", sortedBooks=" + sortedBooks + ", position=" + position
-				+ "]";
+	public long getId() {
+		return id;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
+	@Override
+	public String toString() {
+		return "VoteSessionResult [id=" + id + ", session=" + session.getId()
+				+ ", book=" + book + ", position=" + position + "]";
+	}
+
+	
 }

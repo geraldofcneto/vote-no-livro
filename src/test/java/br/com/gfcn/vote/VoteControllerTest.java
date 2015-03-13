@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
-import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +48,9 @@ public class VoteControllerTest {
 	@Autowired
 	private VoteSessionHandler voteSessionHandler;
 
+	@Autowired
+	VoteSessionResultRepository voteSessionResultRepository;
+	
 	private MockMvc mvc;
 
 	@Before
@@ -110,16 +112,14 @@ public class VoteControllerTest {
 		postVote(2l, 5l, session);
 		postVote(3l, 4l, session);
 		postVote(3l, 5l, session);
-		ResultActions last = postVote(4l, 5l, session);
-
-//		last.andExpect(content().string("The end"));
+		postVote(4l, 5l, session);
 
 		session = voteSessionRepository.findOne(session.getId());
 
-		
-		System.out.println("Fuckin tied: " + voteSessionHandler.tied(session.getId()));
-		
 		Assert.assertTrue(voteSessionHandler.isFinished(session));
+
+		
+		Assert.assertEquals(5, voteSessionResultRepository.count());
 	}
 
 	private ResultActions postVote(long win, long lose, VoteSession session)
@@ -182,7 +182,7 @@ public class VoteControllerTest {
 		@Override
 		public String toString() {
 			return "Request [winner=" + winner + ", loser=" + loser
-					+ ", session=" + session + "]";
+					+ ", session=" + session.getId() + "]";
 		}
 
 	}
