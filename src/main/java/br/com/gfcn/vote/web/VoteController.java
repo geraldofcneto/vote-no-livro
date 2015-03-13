@@ -1,5 +1,6 @@
 package br.com.gfcn.vote.web;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import br.com.gfcn.vote.VoteRepository;
 import br.com.gfcn.vote.VoteSession;
 import br.com.gfcn.vote.VoteSessionHandler;
 import br.com.gfcn.vote.VoteSessionRepository;
+import br.com.gfcn.vote.rest.Accountant;
 import br.com.gfcn.vote.rest.NomineesResponse;
 import br.com.gfcn.vote.rest.Response;
 import br.com.gfcn.vote.rest.VoteResponse;
@@ -37,6 +39,9 @@ public class VoteController {
 
 	@Autowired
 	VoteSessionRepository voteSessionRepository;
+
+	@Autowired
+	Accountant accountant;
 
 	@RequestMapping("/greeting")
 	public String greeting(
@@ -92,8 +97,14 @@ public class VoteController {
 		return response(vote);
 	}
 
+	@RequestMapping(value = "/api/final-counting", method = RequestMethod.GET)
+	public @ResponseBody Map<Book, Long> getFinalCounting() {
+		return accountant.count();
+	}
+
 	private Response response(Vote vote) {
-		if (voteSessionHandler.handleFinished(updatedSession(vote.getSession()))){
+		if (voteSessionHandler
+				.handleFinished(updatedSession(vote.getSession()))) {
 			return new VoteResultResponse(updatedSession(vote.getSession()));
 		}
 
